@@ -145,14 +145,23 @@ async function run() {
       res.send(result);
     });
 
+
+    app.post('/doctors',verifyJWT, verifyAdmin,  async(req, res) => {
+      const newDoctor = req.body;
+      const result = await doctorsCollection.insertOne(newDoctor);
+      res.send(result)
+    })
+
+
+
     //booked appointment related API
-    app.post("/bookedAppointments", async (req, res) => {
+    app.post("/bookedAppointments", verifyJWT,  async (req, res) => {
       const booking = req.body;
       const result = await bookingCollection.insertOne(booking);
       res.send(result);
     });
 
-    app.get("/bookedAppointments",verifyJWT, async (req, res) => {
+    app.get("/bookedAppointments", verifyJWT, async (req, res) => {
       const email = req.query.email;
       if (!email) {
         res.send([]);
